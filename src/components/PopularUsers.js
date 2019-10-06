@@ -1,16 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { getPopularUsers } from '../services/Github';
+import React from 'react';
 import UserCard from './UserCard';
 
-export default () => {
-  const [popularUsers, setPopularUsers] = useState()
-  useEffect(() => {
-    const fetchPopularUser = async () => {
-      setPopularUsers(await getPopularUsers());
-    }
-    fetchPopularUser();
-  }, []);
-
+export default (props) => {
+  const { popularUsers } = props;
   return (
     <div>
       {popularUsers && popularUsers.items && popularUsers.items.map(user => (

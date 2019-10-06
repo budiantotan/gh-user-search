@@ -2,18 +2,25 @@ import path from 'path'
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import express from 'express';
-import { StaticRouter } from 'react-router-dom';
-import AppRoutes from './pages/AppRoutes';
+import { StaticRouter, matchPath } from 'react-router-dom';
+import AppRoutes, { Routes } from './pages/AppRoutes';
 
 // Initiate express
 const app = express();
 app.use('/static', express.static(path.resolve(__dirname, 'public')))
 // Listen to get
-app.get('/*', (req, res) => {
+app.get('/*', async (req, res) => {
+  // Find component, then execute getInitialProps;
+  const route = Routes.find(route => matchPath(req.url, route));
+  const props = await (route && route.component && route.component.getInitialProps && route.component.getInitialProps());
+  const initialProps = route && props && {
+    [route.id]: props
+  };
+
   const context = {};
   const html = ReactDOMServer.renderToString(
     <StaticRouter location={req.url} context={context}>
-      <AppRoutes />
+      <AppRoutes initialProps={initialProps}/>
     </StaticRouter>
   );
 
@@ -25,6 +32,9 @@ app.get('/*', (req, res) => {
       <html>
         <head>
           <title>Github user search</title>
+          <script>
+            window.__INITIAL_PROPS__ = ${JSON.stringify(initialProps)};
+          </script>
         </head>
         <body>
           <div id="root">${html}</div>
