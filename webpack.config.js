@@ -11,7 +11,8 @@ const common = {
         loader: 'babel-loader',
       }
     }]
-  }
+  },
+  devtool: 'inline-source-map'
 }
 
 const server = merge(common, {

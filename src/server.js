@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import express from 'express';
 import { StaticRouter } from 'react-router-dom';
-import AppRoutes from './components/AppRoutes';
+import AppRoutes from './pages/AppRoutes';
 
 // Initiate express
 const app = express();
@@ -18,7 +18,7 @@ app.get('/*', (req, res) => {
   );
 
   if (context.url) {
-    redirect(301, context.url);
+    res.redirect(301, context.url);
   } else {
     const response = `
       <!doctype html>
@@ -29,7 +29,7 @@ app.get('/*', (req, res) => {
         <body>
           <div id="root">${html}</div>
         </body>
-        <script src="/static/app.js" />
+        <script src="/static/app.js"></script>
       </html>
     `;
     res.send(response);
