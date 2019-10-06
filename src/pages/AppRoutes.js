@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Switch, Route, matchPath, useLocation } from 'react-router-dom';
+import { useStore } from 'react-redux'
+import { Switch, Route, useLocation } from 'react-router-dom';
+import { getComponentInitialProps } from '../utils/initialProps';
 // Pages
 import Home from './Home';
 import User from './User';
@@ -20,20 +22,22 @@ export const Routes = [
 
 export default (props) => {
   const location = useLocation();
+  const store = useStore();
   const [initialProps, setInitialProps] = useState(props.initialProps || {})
 
   useEffect(() => {
     const { pathname } = location;
-    const route = Routes.find(route => matchPath(pathname, route));
-    if (!(initialProps && initialProps[route.id])) {
-      const getInitialProps = async () => {
-        const props = await (route && route.component && route.component.getInitialProps && route.component.getInitialProps());
-        const initialPropsResult = route && props && {
-          [route.id]: props
-        };
-        setInitialProps({ ...initialProps, ...initialPropsResult });
+    const { params, getInitialProps, routeId } = getComponentInitialProps(pathname);
+
+    if (typeof getInitialProps === 'function') {
+      const runInitialProps = async () => {
+        const result = await getInitialProps({ params, store });
+        setInitialProps({
+          ...initialProps,
+          ...(result && { [routeId]: result }),
+        });
       }
-      getInitialProps();
+      runInitialProps();
     }
   }, [location.pathname])
 

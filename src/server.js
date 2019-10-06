@@ -3,24 +3,34 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import express from 'express';
 import { StaticRouter, matchPath } from 'react-router-dom';
-import AppRoutes, { Routes } from './pages/AppRoutes';
+import AppRoutes from './pages/AppRoutes';
+import { getComponentInitialProps } from './utils/initialProps';
+import { Provider } from "react-redux";
+import createStore from "./redux/store";
 
 // Initiate express
 const app = express();
 app.use('/static', express.static(path.resolve(__dirname, 'public')))
 // Listen to get
 app.get('/*', async (req, res) => {
+  // Inititate redux store
+  const store = createStore();
+
   // Find component, then execute getInitialProps;
-  const route = Routes.find(route => matchPath(req.url, route));
-  const props = await (route && route.component && route.component.getInitialProps && route.component.getInitialProps());
-  const initialProps = route && props && {
-    [route.id]: props
-  };
+  const { params, getInitialProps, routeId } = getComponentInitialProps(req.url);
+  const initialProps = {};
+
+  if (typeof getInitialProps === 'function') {
+    const props = await getInitialProps({ params, store });
+    Object.assign(initialProps, { [routeId]: props });
+  }
 
   const context = {};
   const html = ReactDOMServer.renderToString(
     <StaticRouter location={req.url} context={context}>
-      <AppRoutes initialProps={initialProps}/>
+      <Provider store={store}>
+        <AppRoutes initialProps={initialProps} />
+      </Provider>
     </StaticRouter>
   );
 
@@ -34,6 +44,7 @@ app.get('/*', async (req, res) => {
           <title>Github user search</title>
           <script>
             window.__INITIAL_PROPS__ = ${JSON.stringify(initialProps)};
+            window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())};
           </script>
         </head>
         <body>
