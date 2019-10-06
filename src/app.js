@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Hello from './components/Hello';
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './components/AppRoutes';
 
 ReactDOM.hydrate(
-  <Hello />,
+  <BrowserRouter>
+    <AppRoutes />
+  </BrowserRouter>,
   document.getElementById('root')
 );
