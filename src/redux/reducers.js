@@ -49,9 +49,38 @@ const searchResult = (state = initialSearchResult, action) => {
 const userInfo = (state = {}, action) => {
   return produce(state, draft => {
     switch (action.type) {
-      case 'ADD_USER':
+      case 'ADD_ALL_USER_INFO':
         draft[action.username] = {
-          userInfo: action.userInfo
+          userInfo: action.userInfo,
+          followers: action.followers,
+          following: action.following,
+        }
+        break;
+      case 'ADD_USER_INFO':
+        if (draft[action.username]) {
+          draft[action.username].userInfo = action.userInfo
+        } else {
+          draft[action.username] = {
+            userInfo: action.userInfo
+          }
+        }
+        break
+      case 'ADD_USER_FOLLOWERS':
+        if (draft[action.username]) {
+          draft[action.username].followers = action.followers
+        } else {
+          draft[action.username] = {
+            followers: action.followers
+          }
+        }
+        break
+      case 'ADD_USER_FOLLOWING':
+        if (draft[action.username]) {
+          draft[action.username].following = action.following
+        } else {
+          draft[action.username] = {
+            following: action.following
+          }
         }
         break
     }

@@ -29,8 +29,30 @@ export const setSearchState = ({ isLoading, isError }) => ({
 })
 // END SEARCH ACTIONS
 
-export const addUser = (userInfo) => ({
-  type: 'ADD_USER',
+// USER ACTIONS
+export const addAllUserInfo = (userInfo, followers, following) => ({
+  type: 'ADD_ALL_USER_INFO',
+  username: userInfo.login,
+  userInfo,
+  followers,
+  following,
+})
+
+export const addUserInfo = (userInfo) => ({
+  type: 'ADD_USER_INFO',
   username: userInfo.login,
   userInfo,
 })
+
+export const addUserFollowers = (username, followers) => ({
+  type: 'ADD_USER_FOLLOWERS',
+  username,
+  followers,
+})
+
+export const addUserFollowing = (username, following) => ({
+  type: 'ADD_USER_FOLLOWING',
+  username,
+  following,
+})
+// END USER ACTIONS
