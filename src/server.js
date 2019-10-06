@@ -4,6 +4,7 @@ import ReactDOMServer from 'react-dom/server';
 import express from 'express';
 import { StaticRouter } from 'react-router-dom';
 import { Provider } from "react-redux";
+import { Helmet } from 'react-helmet';
 import AppRoutes from './pages/AppRoutes';
 import { getComponentInitialProps } from './utils/initialProps';
 import createStore from "./redux/store";
@@ -11,6 +12,11 @@ import createStore from "./redux/store";
 // Initiate express
 const app = express();
 app.use('/static', express.static(path.resolve(__dirname, 'public')))
+app.use('/robots.txt', (req, res) => {
+  res.type('text/plain')
+  res.send("User-agent: *\nDisallow: /"); // Disallow for now
+});
+
 // Listen to get
 app.get('/*', async (req, res) => {
   // Inititate redux store
@@ -33,15 +39,17 @@ app.get('/*', async (req, res) => {
       </Provider>
     </StaticRouter>
   );
+  const helmet = Helmet.renderStatic();
 
   if (context.url) {
     res.redirect(301, context.url);
   } else {
     const response = `
       <!doctype html>
-      <html>
+      <html lang="en">
         <head>
-          <title>Github user search</title>
+          ${helmet.title.toString()}
+          ${helmet.meta.toString()}
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <script>
             window.__INITIAL_PROPS__ = ${JSON.stringify(initialProps)};
@@ -52,7 +60,7 @@ app.get('/*', async (req, res) => {
         <body style="background: #f4f9f4;">
           <div id="root">${html}</div>
         </body>
-        <script src="/static/app.js"></script>
+        <script defer src="/static/app.js"></script>
       </html>
     `;
     res.send(response);

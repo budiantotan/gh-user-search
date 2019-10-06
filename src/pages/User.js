@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from "react-helmet";
 import { useSelector } from 'react-redux';
 import { css } from '@emotion/core';
 import { addAllUserInfo } from '../redux/actions';
@@ -32,6 +33,12 @@ const User = (props) => {
 
   return (
     <React.Fragment>
+      <Helmet>
+        <title>{`Github user detail: ${username}`}</title>
+        <meta property="og:title" content={`Github user detail: ${username}`} />
+        <meta name="description" content={`Information about github user: ${username}, follower and following`} />
+      </Helmet>
+
       <div css={textStyle}>{`Github user: ${username}`}</div>
       <pre css={preStyle}>
         {JSON.stringify(userInfo, null, 2)}

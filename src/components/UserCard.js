@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { css } from '@emotion/core';
+import { SimpleImg } from 'react-simple-img';
 
 const cardStyle = css`
   background: #fff;
@@ -17,12 +18,6 @@ const cardStyle = css`
   }
 `;
 
-const imageStyle = css`
-  height: 50px;
-  width: 50px;
-  border-radius: 25px;
-`;
-
 const usernameStyle = css`
   margin-left: 24px;
   line-height: 50px;
@@ -32,10 +27,25 @@ const usernameStyle = css`
   color: dimgray;
 `;
 
+const imageStyle = {
+  height: 50,
+  width: 50,
+  borderRadius: 25,
+  display: 'inline-block',
+}
+
 export default (props) => {
   return (
     <Link css={cardStyle} to={`/user/${props.userName}`}>
-      <img src={props.avatar} css={imageStyle} />
+      <SimpleImg 
+        importance='low' 
+        src={props.avatar}
+        alt={`Profile picture of ${props.userName}`}
+        imgStyle={imageStyle}
+        style={{ display: 'inline-block' }}
+        height={50}
+        width={50}
+      />
       <span css={usernameStyle}>{props.userName}</span>
     </Link>
   )
