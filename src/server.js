@@ -2,10 +2,10 @@ import path from 'path'
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import express from 'express';
-import { StaticRouter, matchPath } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom';
+import { Provider } from "react-redux";
 import AppRoutes from './pages/AppRoutes';
 import { getComponentInitialProps } from './utils/initialProps';
-import { Provider } from "react-redux";
 import createStore from "./redux/store";
 
 // Initiate express
@@ -42,12 +42,14 @@ app.get('/*', async (req, res) => {
       <html>
         <head>
           <title>Github user search</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <script>
             window.__INITIAL_PROPS__ = ${JSON.stringify(initialProps)};
             window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())};
           </script>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
         </head>
-        <body>
+        <body style="background: #f4f9f4;">
           <div id="root">${html}</div>
         </body>
         <script src="/static/app.js"></script>

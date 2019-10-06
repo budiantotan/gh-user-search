@@ -1,16 +1,33 @@
 import fetch from 'isomorphic-unfetch';
 
-export const getPopularUsers = async () => {
-  const response = await fetch('https://api.github.com/search/users?q=+repos:%3E42+followers:%3E1000')
-  return await response.json();
+const _callAPI = async url => {
+  const response = await fetch(url);
+  if (response.status === 200) {
+    return await response.json();
+  }
+  throw Error();
 }
 
-export const getUser = async (username) => {
-  const response = await fetch(`https://api.github.com/users/${username}`)
-  return await response.json();
+export const getPopularUsers = () => {
+  return _callAPI('https://api.github.com/search/users?q=+repos:%3E42+followers:%3E1000')
 }
 
-export const searchUser = async keyword => {
-  const response = await fetch(`https://api.github.com/search/users?q=${keyword}`)
-  return await response.json();
+export const getUser = (username) => {
+  return _callAPI(`https://api.github.com/users/${username}`)
+}
+
+export const getUserFollower = (username) => {
+  return _callAPI(`https://api.github.com/users/${username}/followers`)
+}
+
+export const getUserFollowing = (username) => {
+  return _callAPI(`https://api.github.com/users/${username}/following`)
+}
+
+export const getUserRepo = (username) => {
+  return _callAPI(`https://api.github.com/users/${username}/repo`)
+}
+
+export const searchUser = keyword => {
+  return _callAPI(`https://api.github.com/search/users?q=${keyword}`)
 }

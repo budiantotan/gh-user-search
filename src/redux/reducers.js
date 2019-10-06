@@ -11,6 +11,23 @@ const popularList = (state = {}, action) => {
   })
 }
 
+const searchResult = (state = {}, action) => {
+  return produce(state, draft => {
+    switch (action.type) {
+      case 'SET_SEARCH_STATE':
+        draft.isLoading = action.isLoading;
+        draft.isError = action.isError;
+        break;
+      case 'SET_SEARCH_RESULT':
+        draft.isLoading = false;
+        draft.isError = false;
+        draft.items = action.items;
+        draft.hasNext = action.hasNext;
+        break
+    }
+  })
+}
+
 const userInfo = (state = {}, action) => {
   return produce(state, draft => {
     switch (action.type) {
@@ -23,4 +40,4 @@ const userInfo = (state = {}, action) => {
   })
 }
 
-export default combineReducers({ userInfo, popularList })
+export default combineReducers({ userInfo, popularList, searchResult })

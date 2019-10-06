@@ -1,10 +1,27 @@
 import { useEffect, useState } from 'react';
 import { useStore } from 'react-redux'
 import { Switch, Route, useLocation } from 'react-router-dom';
+import { css } from '@emotion/core'
 import { getComponentInitialProps } from '../utils/initialProps';
 // Pages
 import Home from './Home';
 import User from './User';
+
+const style = css`
+  @media (min-width: 768px) {
+    max-width: 768px;
+    margin: 0 auto;
+  }
+`;
+
+const Container = (props) => {
+  return (
+    <div css={style}>
+      {props.children}
+    </div>
+  )
+}
+
 
 export const Routes = [
   {
@@ -49,7 +66,7 @@ export default (props) => {
           path={route.path}
           exact
           render={(props) => (
-            <route.component {...(initialProps && initialProps[route.id])} {...props} />
+            <Container><route.component {...(initialProps && initialProps[route.id])} {...props} /></Container>
           )}
         />
       ))}
