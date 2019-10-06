@@ -28,6 +28,6 @@ export const getUserRepo = (username) => {
   return _callAPI(`https://api.github.com/users/${username}/repo`)
 }
 
-export const searchUser = keyword => {
-  return _callAPI(`https://api.github.com/search/users?q=${keyword}`)
+export const searchUser = (keyword, page) => {
+  return _callAPI(`https://api.github.com/search/users?q=${keyword}&page=${page}`)
 }

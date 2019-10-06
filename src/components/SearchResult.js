@@ -30,7 +30,8 @@ export default () => {
     return (<div css={errorMessageStyle}>{'Opps, something bad happened. Please retry'}</div>)
   }
 
+  const page = searchResultState.currentPage;
   return (
-    <UserList userList={searchResultState.items} />
+    <UserList userList={searchResultState.items && searchResultState.items[page]} />
   )
 }

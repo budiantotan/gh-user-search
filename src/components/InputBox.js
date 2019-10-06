@@ -1,8 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { css } from '@emotion/core';
 import { useDispatch } from 'react-redux';
-import { searchUser } from '../services/Github';
-import { setSearchResult, setSearchState } from '../redux/actions';
+import { useSearchUsers } from '../hooks/searchHook';
+import { setKeyword as setSearchKeyword } from '../redux/actions';
 
 const containerStyle = css`
   margin: 12px;
@@ -41,20 +41,16 @@ const buttonStyle = css`
 
 export default () => {
   const dispatch = useDispatch();
+  const searchUsers = useSearchUsers();
   const [keyword, setKeyword] = useState('');
 
   const handleChange = (e) => {
     setKeyword(e.target.value);
   }
-  const handleClick = async () => {
+  const handleClick = () => {
     if (keyword) {
-      try {
-        dispatch(setSearchState({ isLoading: true, isError: false }));
-        const result = await searchUser(keyword);
-        dispatch(setSearchResult(result));
-      } catch (e) {
-        dispatch(setSearchState({ isLoading: false, isError: true }));
-      }
+      dispatch(setSearchKeyword(keyword));
+      searchUsers(keyword);
     }
   };
 

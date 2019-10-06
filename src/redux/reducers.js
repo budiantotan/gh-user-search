@@ -11,19 +11,37 @@ const popularList = (state = {}, action) => {
   })
 }
 
-const searchResult = (state = {}, action) => {
+const initialSearchResult = {
+  isLoading: false,
+  isError: false,
+  keyword: '',
+  currentPage: null,
+  totalRow: null,
+  items: {},
+  hasNext: null
+}
+
+const searchResult = (state = initialSearchResult, action) => {
   return produce(state, draft => {
     switch (action.type) {
       case 'SET_SEARCH_STATE':
         draft.isLoading = action.isLoading;
         draft.isError = action.isError;
         break;
+      case 'SET_SEARCH_KEYWORD':
+        draft.keyword = action.keyword;
+        break;
+      case 'SET_CURRENT_PAGE':
+        draft.currentPage = action.page;
+        break;
       case 'SET_SEARCH_RESULT':
         draft.isLoading = false;
         draft.isError = false;
-        draft.items = action.items;
+        draft.currentPage = action.page;
+        draft.totalRow = action.totalRow;
+        draft.items[action.page] = action.items;
         draft.hasNext = action.hasNext;
-        break
+        break;
     }
   })
 }
