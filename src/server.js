@@ -65,6 +65,6 @@ app.get('/*', async (req, res) => {
     `;
     res.send(response);
   }
-}).listen(3000, () => {
+}).listen(process.env.PORT || 5000, () => {
   console.log('Started at 3000');
 });

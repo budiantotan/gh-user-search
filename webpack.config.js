@@ -1,6 +1,9 @@
 const path = require('path');
 const merge = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
+const TerserPlugin = require('terser-webpack-plugin');
+
+const isProd = process.env.NODE_ENV === 'production';
 
 const common = {
   module: {
@@ -12,7 +15,19 @@ const common = {
       }
     }]
   },
-  devtool: process.env.NODE_ENV === 'production' ? 'none' : 'inline-source-map',
+  optimization: {
+    nodeEnv: isProd ? "production" : false,
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        terserOptions: {
+          safari10: true,
+        },
+        extractComments: true,
+      }),
+    ],
+  },
+  devtool: isProd ? 'none' : 'inline-source-map',
 }
 
 const server = merge(common, {
